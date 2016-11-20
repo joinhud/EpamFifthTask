@@ -7,6 +7,7 @@ import com.epam.fifth.exception.CandiesStAXException;
 import com.epam.fifth.type.CandyEnum;
 import com.epam.fifth.type.ChocolateColor;
 import com.epam.fifth.type.SweetType;
+import com.epam.fifth.validate.XMLValidator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,37 +19,23 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class CandiesStAXBuilder {
+public class CandiesStAXBuilder extends AbstractCandiesBuilder {
     private static final Logger LOG = LogManager.getLogger();
 
-    private Set<Candy> candies;
     private XMLInputFactory inputFactory;
 
     public CandiesStAXBuilder() {
-        candies = new HashSet<>();
         inputFactory = XMLInputFactory.newInstance();
     }
 
-    public Set<Candy> getCandies() {
-        return candies;
-    }
+    @Override
+    public void buildSetCandies(String fileName, String schemaName) {
+        XMLValidator.validate(fileName,schemaName);
 
-    public List<String> getCandiesStrings() {
-        return candies.stream()
-                .map(Object::toString)
-                .collect(Collectors.toList());
-    }
-
-    public void buildSetCandies(String fileName) {
-        XMLStreamReader reader = null;
+        XMLStreamReader reader;
         String name;
         try (FileInputStream inputStream = new FileInputStream(new File(fileName))) {
-//            inputStream = new FileInputStream(new File(fileName));
             reader = inputFactory.createXMLStreamReader(inputStream);
 
             while (reader.hasNext()) {
@@ -225,7 +212,6 @@ public class CandiesStAXBuilder {
                 }
             }
         }
-        //выкинуть свое исключение
         throw new CandiesStAXException("Unknown element in tag Value");
     }
 

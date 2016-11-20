@@ -15,10 +15,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CandiesSAXBuilder {
+public class CandiesSAXBuilder extends AbstractCandiesBuilder {
     private static final Logger LOG = LogManager.getLogger();
 
-    private Set<Candy> candies;
     private CandyHandler handler;
     private XMLReader reader;
 
@@ -32,16 +31,7 @@ public class CandiesSAXBuilder {
         }
     }
 
-    public Set<Candy> getCandies() {
-        return candies;
-    }
-
-    public List<String> getCandiesStrings() {
-        return candies.stream()
-                .map(Object::toString)
-                .collect(Collectors.toList());
-    }
-
+    @Override
     public void buildSetCandies(String fileName, String schemaName) {
         XMLValidator.validate(fileName, schemaName);
         try {

@@ -1,6 +1,5 @@
 package com.epam.fifth.builder;
 
-import com.epam.fifth.entity.Candy;
 import com.epam.fifth.entity.Chocolate;
 import com.epam.fifth.entity.Sweet;
 import com.epam.fifth.type.CandyEnum;
@@ -20,20 +19,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class CandiesDOMBuilder {
+public class CandiesDOMBuilder extends AbstractCandiesBuilder {
     private static final Logger LOG = LogManager.getLogger();
 
-    private Set<Candy> candies;
     private DocumentBuilder docBuilder;
 
     public CandiesDOMBuilder() {
-        candies = new HashSet<>();
-
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             docBuilder = factory.newDocumentBuilder();
@@ -42,19 +34,12 @@ public class CandiesDOMBuilder {
         }
     }
 
-    public Set<Candy> getCandies() {
-        return candies;
-    }
-
-    public List<String> getCandiesStrings() {
-        return candies.stream()
-                .map(Object::toString)
-                .collect(Collectors.toList());
-    }
-
+    @Override
     public void buildSetCandies(String fileName, String schemaName) {
-        Document doc = null;
         XMLValidator.validate(fileName, schemaName);
+
+        Document doc;
+
         try {
             doc = docBuilder.parse(fileName);
             Element root = doc.getDocumentElement();
@@ -81,6 +66,7 @@ public class CandiesDOMBuilder {
         Sweet sweet = new Sweet();
 
         sweet.setName(sweetElement.getAttribute(CandyEnum.NAME.getValue()));
+
         Double energy = Double.parseDouble(getElementTextContent(sweetElement, CandyEnum.ENERGY.getValue()));
         sweet.setEnergy(energy);
 
@@ -93,6 +79,7 @@ public class CandiesDOMBuilder {
         sweet.getValue().setCarbohydrates(carbohydrates);
 
         sweet.setProduction(getElementTextContent(sweetElement, CandyEnum.PRODUCTION.getValue()));
+
         sweet.setType(SweetType.valueOf(getElementTextContent(sweetElement, CandyEnum.TYPE.getValue()).toUpperCase()));
 
         Double water = Double.parseDouble(getElementTextContent(sweetElement, CandyEnum.WATER.getValue()));
@@ -111,6 +98,7 @@ public class CandiesDOMBuilder {
         Chocolate chocolate = new Chocolate();
 
         chocolate.setName(chocolateElement.getAttribute(CandyEnum.NAME.getValue()));
+
         Double energy = Double.parseDouble(getElementTextContent(chocolateElement, CandyEnum.ENERGY.getValue()));
         chocolate.setEnergy(energy);
 
@@ -123,6 +111,7 @@ public class CandiesDOMBuilder {
         chocolate.getValue().setCarbohydrates(carbohydrates);
 
         chocolate.setProduction(getElementTextContent(chocolateElement, CandyEnum.PRODUCTION.getValue()));
+
         String chocolateColorType = getElementTextContent(chocolateElement, CandyEnum.COLOR.getValue()).toUpperCase();
         chocolate.setColor(ChocolateColor.valueOf(chocolateColorType));
 

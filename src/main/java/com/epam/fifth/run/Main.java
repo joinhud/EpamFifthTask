@@ -1,28 +1,41 @@
 package com.epam.fifth.run;
 
-import com.epam.fifth.builder.CandiesDOMBuilder;
-import com.epam.fifth.builder.CandiesSAXBuilder;
-import com.epam.fifth.builder.CandiesStAXBuilder;
+import com.epam.fifth.builder.AbstractCandiesBuilder;
+import com.epam.fifth.exception.CandiesBuilderFactoryException;
+import com.epam.fifth.factory.CandiesBuilderFactory;
 import com.epam.fifth.report.Report;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main {
-    private static final String CANDIES_XML = "data/candies.xml";
-    private static final String CANDIES_XSD = "data/candies.xsd";
+    private static final Logger LOG = LogManager.getLogger();
+
+    private static final String CANDIES_FILE_XML = "data/candies.xml";
+    private static final String CANDIES_FILE_XSD = "data/candies.xsd";
+
+    private static final String SAX = "sax";
+    private static final String STAX = "stax";
+    private static final String DOM = "dom";
 
     public static void main(String[] args) {
-//        CandiesSAXBuilder saxBuilder = new CandiesSAXBuilder();
-//        saxBuilder.buildSetCandies(CANDIES_XML, CANDIES_XSD);
-//        Report report = new Report();
-//        report.writeCandiesDataReport(saxBuilder.getCandiesStrings());
-
-        /*CandiesDOMBuilder domBuilder = new CandiesDOMBuilder();
-        domBuilder.buildSetCandies(CANDIES_XML, CANDIES_XSD);
+        CandiesBuilderFactory factory = new CandiesBuilderFactory();
         Report report = new Report();
-        report.writeCandiesDataReport(domBuilder.getCandiesStrings());*/
 
-        CandiesStAXBuilder builder = new CandiesStAXBuilder();
-        builder.buildSetCandies(CANDIES_XML);
-        Report report = new Report();
-        report.writeCandiesDataReport(builder.getCandiesStrings());
+        try {
+            AbstractCandiesBuilder builder = factory.createCandiesBuiler(SAX);
+            builder.buildSetCandies(CANDIES_FILE_XML, CANDIES_FILE_XSD);
+            report.writeCandiesDataReport(builder.getCandiesStrings());
+
+            builder = factory.createCandiesBuiler(STAX);
+            builder.buildSetCandies(CANDIES_FILE_XML, CANDIES_FILE_XSD);
+            report.writeCandiesDataReport(builder.getCandiesStrings());
+
+            builder = factory.createCandiesBuiler(DOM);
+            builder.buildSetCandies(CANDIES_FILE_XML, CANDIES_FILE_XSD);
+            report.writeCandiesDataReport(builder.getCandiesStrings());
+        } catch (CandiesBuilderFactoryException e) {
+            LOG.log(Level.ERROR, e);
+        }
     }
 }
