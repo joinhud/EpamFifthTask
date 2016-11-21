@@ -31,10 +31,18 @@ public class CandiesStAXBuilder extends AbstractCandiesBuilder {
 
     @Override
     public void buildSetCandies(String fileName, String schemaName) {
-        XMLValidator.validate(fileName,schemaName);
+        if (!checkFileName(fileName) || !checkSchemaName(schemaName)) {
+            LOG.log(Level.ERROR, "One of transmittable parameters object is null.");
+            return;
+        }
+
+        if (!XMLValidator.validate(fileName, schemaName)) {
+            return;
+        }
 
         XMLStreamReader reader;
         String name;
+
         try (FileInputStream inputStream = new FileInputStream(new File(fileName))) {
             reader = inputFactory.createXMLStreamReader(inputStream);
 
@@ -81,7 +89,7 @@ public class CandiesStAXBuilder extends AbstractCandiesBuilder {
                     chocolate.setIngredients(getXMLChocolateIngredients(reader));
                 }
             } else if (XMLStreamConstants.END_ELEMENT == type) {
-                name  = reader.getLocalName();
+                name = reader.getLocalName();
 
                 if (CandyEnum.CHOCOLATE.getValue().equals(name)) {
                     return chocolate;
@@ -114,7 +122,7 @@ public class CandiesStAXBuilder extends AbstractCandiesBuilder {
                     sweet.setIngredients(getXMLSweetIngredients(reader));
                 }
             } else if (XMLStreamConstants.END_ELEMENT == type) {
-                name  = reader.getLocalName();
+                name = reader.getLocalName();
 
                 if (CandyEnum.SWEET.getValue().equals(name)) {
                     return sweet;

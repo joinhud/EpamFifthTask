@@ -11,8 +11,18 @@ public class CandiesBuilderFactory {
         SAX, STAX, DOM
     }
 
-    public AbstractCandiesBuilder createCandiesBuiler(String typeParser) throws CandiesBuilderFactoryException {
-        TypeParser type = TypeParser.valueOf(typeParser.toUpperCase());
+    public AbstractCandiesBuilder createCandiesBuilder(String typeParser) throws CandiesBuilderFactoryException {
+        if (typeParser == null) {
+            throw new CandiesBuilderFactoryException("Transmittable object is null.");
+        }
+
+        TypeParser type;
+
+        try {
+            type = TypeParser.valueOf(typeParser.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new CandiesBuilderFactoryException("Unknown type of builder.", e);
+        }
 
         switch (type) {
             case DOM:

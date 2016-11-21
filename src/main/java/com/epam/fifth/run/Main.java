@@ -23,15 +23,15 @@ public class Main {
         Report report = new Report();
 
         try {
-            AbstractCandiesBuilder builder = factory.createCandiesBuiler(SAX);
+            AbstractCandiesBuilder builder = factory.createCandiesBuilder(SAX);
             builder.buildSetCandies(CANDIES_FILE_XML, CANDIES_FILE_XSD);
             report.writeCandiesDataReport(builder.getCandiesStrings());
 
-            builder = factory.createCandiesBuiler(STAX);
+            builder = factory.createCandiesBuilder(STAX);
             builder.buildSetCandies(CANDIES_FILE_XML, CANDIES_FILE_XSD);
             report.writeCandiesDataReport(builder.getCandiesStrings());
 
-            builder = factory.createCandiesBuiler(DOM);
+            builder = factory.createCandiesBuilder(DOM);
             builder.buildSetCandies(CANDIES_FILE_XML, CANDIES_FILE_XSD);
             report.writeCandiesDataReport(builder.getCandiesStrings());
         } catch (CandiesBuilderFactoryException e) {

@@ -1,6 +1,5 @@
 package com.epam.fifth.builder;
 
-import com.epam.fifth.entity.Candy;
 import com.epam.fifth.handler.CandyHandler;
 import com.epam.fifth.validate.XMLValidator;
 import org.apache.logging.log4j.Level;
@@ -11,9 +10,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CandiesSAXBuilder extends AbstractCandiesBuilder {
     private static final Logger LOG = LogManager.getLogger();
@@ -33,6 +29,15 @@ public class CandiesSAXBuilder extends AbstractCandiesBuilder {
 
     @Override
     public void buildSetCandies(String fileName, String schemaName) {
+        if (!checkFileName(fileName) || !checkSchemaName(schemaName)) {
+            LOG.log(Level.ERROR, "One of transmittable parameters object is null.");
+            return;
+        }
+
+        if (!XMLValidator.validate(fileName, schemaName)) {
+            return;
+        }
+
         XMLValidator.validate(fileName, schemaName);
         try {
             reader.parse(fileName);

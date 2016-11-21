@@ -38,7 +38,7 @@ public class CandyHandler extends DefaultHandler {
         if (CandyEnum.SWEET.getValue().equals(localName)) {
             current = new Sweet();
             current.setName(attributes.getValue(FIRST_ATTRIBUTE));
-        } else if(CandyEnum.CHOCOLATE.getValue().equals(localName)) {
+        } else if (CandyEnum.CHOCOLATE.getValue().equals(localName)) {
             current = new Chocolate();
             current.setName(attributes.getValue(FIRST_ATTRIBUTE));
         } else {

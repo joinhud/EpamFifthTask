@@ -27,6 +27,7 @@ public class CandiesDOMBuilder extends AbstractCandiesBuilder {
 
     public CandiesDOMBuilder() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
         try {
             docBuilder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
@@ -36,7 +37,14 @@ public class CandiesDOMBuilder extends AbstractCandiesBuilder {
 
     @Override
     public void buildSetCandies(String fileName, String schemaName) {
-        XMLValidator.validate(fileName, schemaName);
+        if (!checkFileName(fileName) || !checkSchemaName(schemaName)) {
+            LOG.log(Level.ERROR, "One of transmittable parameters object is null.");
+            return;
+        }
+
+        if (!XMLValidator.validate(fileName, schemaName)) {
+            return;
+        }
 
         Document doc;
 

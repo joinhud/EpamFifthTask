@@ -4,7 +4,6 @@ package com.epam.fifth.report;
 import com.epam.fifth.file.FileWorker;
 
 import java.util.List;
-import java.util.Set;
 
 public class Report {
     private static final String FILE_PATH = "data/report.txt";
@@ -16,7 +15,7 @@ public class Report {
         this.worker = new FileWorker();
     }
 
-    public void writeCandiesDataReport(List<String> data){
+    public void writeCandiesDataReport(List<String> data) {
         /*if (data == null) {
             throw new GiftLogicException("Gift data is null.");
         }*/

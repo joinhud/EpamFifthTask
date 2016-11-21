@@ -18,19 +18,29 @@ import java.io.IOException;
 public class XMLValidator {
     private static final Logger LOG = LogManager.getLogger();
 
-    public static void validate(String filePath, String schemaPath) {
+    public static boolean validate(String filePath, String schemaPath) {
+        boolean result = false;
+
+        if (schemaPath == null) {
+            return false;
+        }
+
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        File schemaLocation = new File(schemaPath);
 
         try {
+            File schemaLocation = new File(schemaPath);
             Schema schema = factory.newSchema(schemaLocation);
             Validator validator = schema.newValidator();
             Source source = new StreamSource(filePath);
             validator.setErrorHandler(new CandiesErrorHandler());
             validator.validate(source);
             LOG.info("Validating is ended.");
+            result = true;
         } catch (SAXException | IOException e) {
+            result = false;
             LOG.log(Level.ERROR, e);
         }
+
+        return result;
     }
 }

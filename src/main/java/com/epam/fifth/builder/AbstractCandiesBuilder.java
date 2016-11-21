@@ -24,5 +24,13 @@ public abstract class AbstractCandiesBuilder {
                 .collect(Collectors.toList());
     }
 
+    public boolean checkFileName(String fileName) {
+        return fileName != null;
+    }
+
+    public boolean checkSchemaName(String schemaName) {
+        return schemaName != null;
+    }
+
     public abstract void buildSetCandies(String fileName, String schemaName);
 }
